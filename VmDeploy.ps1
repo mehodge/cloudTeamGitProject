@@ -1,10 +1,10 @@
 $TenantId = ''
 $SubID = ''
 $RG = 'cloudTeamGitProject'
-$Name = 'Server2019 Deployment'
+$Name = 'Server2019-Deployment'
 $Location = 'North Europe'
-$TemplateFile = "azuredeploy.json"
-$TemplateParameterFile = "azuredeploy.parameters.json"
+$TemplateFile = "C:\Users\MehodgeAdmin\OneDrive\Git\cloudTeamGitProject\azuredeploy.json"
+$TemplateParameterFile = "C:\Users\MehodgeAdmin\OneDrive\Git\cloudTeamGitProject\azuredeploy.parameters.json"
 
 Connect-AzAccount -TenantId $TenantId -SubscriptionID $SubID
 

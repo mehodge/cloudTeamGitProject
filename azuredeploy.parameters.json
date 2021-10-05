@@ -10,11 +10,11 @@
         "keyVault": {
             "id": ""
         },
-        "secretName": "LocalAdmin"
+        "secretName": "AzAdmin"
         }
     },
     "publicIpName": {
-      "value": "pip"
+      "value": "MehodgeServer-pip"
     },
     "publicIPAllocationMethod": {
       "value": "Dynamic"
