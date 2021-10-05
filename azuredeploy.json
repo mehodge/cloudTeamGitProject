@@ -67,6 +67,22 @@
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_B2ms",
+      "allowedValues": [
+        "Standard_B1ms",
+        "Standard_B1s",
+        "Standard_B2ms",
+        "Standard_B2s",
+        "Standard_B4ms",
+        "Standard_B8ms",
+        "Standard_D2s_v4",
+        "Standard_D4s_v4",
+        "Standard_D8s_v4",
+        "Standard_D16s_v4",
+        "Standard_E2_v4",
+        "Standard_E4_v4",
+        "Standard_E8_v4",
+        "Standard_E16_v4"
+      ],
       "metadata": {
         "description": "Size of the virtual machine."
       }
@@ -84,17 +100,65 @@
       "metadata": {
         "description": "Name of the virtual machine."
       }
+    },
+    "AddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "VNet address prefix"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "DefaultSubnet",
+      "metadata": {
+        "description": "New subnet Name"
+      }
+    },
+    "subnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.1.0/24",
+      "metadata": {
+        "description": "Subnet address prefix"
+      }
+    },
+    "virtualNetworkName": {
+    "type": "string",
+      "defaultValue": "Default-Vnet",
+      "metadata": {
+        "description": "Name of the virtual network the virtual machine will connect to."
+      }
+    },
+    "networkSecurityGroupName": {
+    "type": "string",
+      "defaultValue": "Default-NSG",
+      "metadata": {
+        "description": "Name of the virtual network the virtual machine will connect to."
+      }
+    },
+	"Tags": {
+		"type": "object",
+        "defaultValue": {
+          "Application": "MS Server",
+          "DataClassification": "Internal",
+          "Environment": "Training",
+          "Monitoring": "Off",
+          "Owner": "Michael Neal",
+          "Vendor": "Mehodge"
+        }
     }
   },
   "variables": {
     "storageAccountName": "[concat('bootdiags', uniquestring(resourceGroup().id))]",
-    "nicName": "CA-CA-Stand1-Nic",
-    "addressPrefix": "10.100.0.0/16",
-    "subnetName": "Subnet",
-    "subnetPrefix": "10.100.1.0/24",
-    "virtualNetworkName": "CA-VNET",
+    "availabilitySetName": "[concat('AS-',resourceGroup().name)]",
+    "nicName": "[concat(parameters('vmName'), '-nic1')]",
+    "addressPrefix": "[parameters('AddressPrefix')]",
+    "subnetName": "[parameters('subnetName')]",
+    "subnetPrefix": "[parameters('subnetAddressPrefix')]",
+    "virtualNetworkName": "[parameters('virtualNetworkName')]",
+    "publicIpName": "[concat(parameters('vmName'),parameters('publicIpName'))]",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
-    "networkSecurityGroupName": "CA-NSG"
+    "networkSecurityGroupName": "[parameters('networkSecurityGroupName')]"
   },
   "resources": [
     {
@@ -102,6 +166,14 @@
       "apiVersion": "2019-06-01",
       "name": "[variables('storageAccountName')]",
       "location": "[parameters('location')]",
+	    "tags": {
+                "Application": "[toLower(parameters('Tags').Application)]",
+                "Data Classification": "[toLower(parameters('Tags').DataClassification)]",
+                "Environment": "[toLower(parameters('Tags').Environment)]",
+                "Monitoring": "[toLower(parameters('Tags').Monitoring)]",
+                "Owner": "[toLower(parameters('Tags').Owner)]",
+                "Vendor": "[toLower(parameters('Tags').Vendor)]"
+            },
       "sku": {
         "name": "Standard_LRS"
       },
@@ -109,10 +181,39 @@
       "properties": {}
     },
     {
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2020-06-01",
+      "name": "[variables('availabilitySetName')]",
+      "location": "[parameters('location')]",
+	    "tags": {
+                "Application": "[toLower(parameters('Tags').Application)]",
+                "Data Classification": "[toLower(parameters('Tags').DataClassification)]",
+                "Environment": "[toLower(parameters('Tags').Environment)]",
+                "Monitoring": "[toLower(parameters('Tags').Monitoring)]",
+                "Owner": "[toLower(parameters('Tags').Owner)]",
+                "Vendor": "[toLower(parameters('Tags').Vendor)]"
+            },
+      "properties": {
+        "platformFaultDomainCount": "3",
+        "platformUpdateDomainCount": "10"
+      },
+      "sku": {
+        "name": "Aligned"
+      }
+    },
+    {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-06-01",
-      "name": "[parameters('publicIPName')]",
+      "name": "[variables('publicIPName')]",
       "location": "[parameters('location')]",
+	    "tags": {
+                "Application": "[toLower(parameters('Tags').Application)]",
+                "Data Classification": "[toLower(parameters('Tags').DataClassification)]",
+                "Environment": "[toLower(parameters('Tags').Environment)]",
+                "Monitoring": "[toLower(parameters('Tags').Monitoring)]",
+                "Owner": "[toLower(parameters('Tags').Owner)]",
+                "Vendor": "[toLower(parameters('Tags').Vendor)]"
+            },
       "sku": {
         "name": "[parameters('publicIpSku')]"
       },
@@ -128,6 +229,14 @@
       "apiVersion": "2020-06-01",
       "name": "[variables('networkSecurityGroupName')]",
       "location": "[parameters('location')]",
+	    "tags": {
+                "Application": "[toLower(parameters('Tags').Application)]",
+                "Data Classification": "[toLower(parameters('Tags').DataClassification)]",
+                "Environment": "[toLower(parameters('Tags').Environment)]",
+                "Monitoring": "[toLower(parameters('Tags').Monitoring)]",
+                "Owner": "[toLower(parameters('Tags').Owner)]",
+                "Vendor": "[toLower(parameters('Tags').Vendor)]"
+            },
       "properties": {
         "securityRules": [
           {
@@ -151,6 +260,14 @@
       "apiVersion": "2020-06-01",
       "name": "[variables('virtualNetworkName')]",
       "location": "[parameters('location')]",
+	    "tags": {
+                "Application": "[toLower(parameters('Tags').Application)]",
+                "Data Classification": "[toLower(parameters('Tags').DataClassification)]",
+                "Environment": "[toLower(parameters('Tags').Environment)]",
+                "Monitoring": "[toLower(parameters('Tags').Monitoring)]",
+                "Owner": "[toLower(parameters('Tags').Owner)]",
+                "Vendor": "[toLower(parameters('Tags').Vendor)]"
+            },
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
       ],
@@ -178,6 +295,14 @@
       "apiVersion": "2020-06-01",
       "name": "[variables('nicName')]",
       "location": "[parameters('location')]",
+	    "tags": {
+                "Application": "[toLower(parameters('Tags').Application)]",
+                "Data Classification": "[toLower(parameters('Tags').DataClassification)]",
+                "Environment": "[toLower(parameters('Tags').Environment)]",
+                "Monitoring": "[toLower(parameters('Tags').Monitoring)]",
+                "Owner": "[toLower(parameters('Tags').Owner)]",
+                "Vendor": "[toLower(parameters('Tags').Vendor)]"
+            },
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPName'))]",
         "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
@@ -204,6 +329,14 @@
       "apiVersion": "2020-06-01",
       "name": "[parameters('vmName')]",
       "location": "[parameters('location')]",
+	    "tags": {
+                "Application": "[toLower(parameters('Tags').Application)]",
+                "Data Classification": "[toLower(parameters('Tags').DataClassification)]",
+                "Environment": "[toLower(parameters('Tags').Environment)]",
+                "Monitoring": "[toLower(parameters('Tags').Monitoring)]",
+                "Owner": "[toLower(parameters('Tags').Owner)]",
+                "Vendor": "[toLower(parameters('Tags').Vendor)]"
+            },
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
         "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
@@ -211,6 +344,9 @@
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
         },
         "osProfile": {
           "computerName": "[parameters('vmName')]",
@@ -225,6 +361,7 @@
             "version": "latest"
           },
           "osDisk": {
+            "name": "[concat(parameters('vmName'), '-OS')]",
             "createOption": "FromImage",
             "managedDisk": {
               "storageAccountType": "StandardSSD_LRS"

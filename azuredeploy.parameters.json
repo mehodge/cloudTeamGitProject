@@ -8,13 +8,46 @@
     "adminPassword": {
     "reference": {
         "keyVault": {
-            "id": "/subscriptions/e7aabd16-98cd-4367-ad15-a2d7c95b70d8/resourceGroups/CCHT-WVD-RG/providers/Microsoft.KeyVault/vaults/arkadmin"
+            "id": "/subscriptions/bad8333d-60e3-47ec-884d-20456f2df201/resourceGroups/Shared-RG/providers/Microsoft.KeyVault/vaults/LocalAdmin-KV"
         },
         "secretName": "LocalAdmin"
         }
     },
+    "publicIpName": {
+      "value": "pip"
+    },
+    "publicIPAllocationMethod": {
+      "value": "Dynamic"
+    },
+    "publicIpSku": {
+      "value": "Basic"
+    },
+    "AddressPrefix": {
+      "value": "10.0.0.0/16"
+    },
+    "virtualNetworkName": {
+      "value": "MehodgeServer-Vnet"
+    },
+    "subnetName": {
+      "value": "MehodgeServerSubnet"
+    },
+    "subnetAddressPrefix": {
+      "value": "10.0.1.0/24"
+    },
+    "networkSecurityGroupName": {
+      "value": "MehodgeServer-NSG"
+    },
+    "OSVersion": {
+      "value": "2019-Datacenter"
+    },
+    "vmSize": {
+      "value": "Standard_B2ms"
+    },
+    "vmName": {
+      "value": "MehodgeServer"
+    },
     "dnsLabelPrefix": {
-      "value": "ccchtavdimage"
+      "value": "mehodge2019kv"
     }
   }
 }

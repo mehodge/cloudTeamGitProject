@@ -1,12 +1,14 @@
-$TenantId = '3176e70d-cb5d-474c-99c6-aecf87bea122'
-$SubID = '9d57f0d2-39c5-4cfb-af16-1988037f5cd7'
-$RG = 'CA-RG'
-$Name = 'CA-Stand1'
-$TemplateFile = "C:\Users\mehodgeadmin\OneDrive\Git\WinServerVM-KV\azuredeploy.json"
-$TemplateParameterFile = "C:\Users\mehodgeadmin\OneDrive\Git\WinServerVM-KV\azuredeploy.parameters.json"
+$TenantId = '5c147d8a-3229-4a42-a54e-98b937904e15'
+$SubID = 'bad8333d-60e3-47ec-884d-20456f2df201'
+$RG = 'cloudTeamGitProject'
+$Name = 'Server2019 Deployment'
+$Location = 'North Europe'
+$TemplateFile = "C:\Users\MehodgeAdmin\OneDrive\Git\cloudTeamGitProject\azuredeploy.json"
+$TemplateParameterFile = "C:\Users\MehodgeAdmin\OneDrive\Git\cloudTeamGitProject\azuredeploy.parameters.json"
 
-#Connect-AzAccount -TenantId $TenantId -SubscriptionID $SubID
+Connect-AzAccount -TenantId $TenantId -SubscriptionID $SubID
 
+New-AzResourceGroup -Name $RG -Location $Location
 New-AzResourceGroupDeployment `
     -Name $Name `
     -ResourceGroupName $RG `
